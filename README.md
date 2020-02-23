@@ -1,8 +1,6 @@
-# AdvanceWebSolution
-MOD004364 - AdvanceWebSolution
+# MOD004364 - AdvanceWebSolution
 
-
-Attendance System Project
+# Attendance System Project
 
 * DO NOT push any configuration files (config.php) files into the Master repository or you might crash the project.
 * Please pull this project into your own repository before pushing the code into the master-branch.
