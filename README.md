@@ -8,4 +8,7 @@
 * First Timers: Please pull this project and place it into your XAMPP server folder (htdocs) and Have fun coding! :D
 
 
-Haston Ng
+
+
+
+**_Haston Ng_**
