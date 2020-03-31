@@ -1,0 +1,96 @@
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    /* overflow: hidden; */
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+}
+
+/* 
+div#main-area div#main-container div#main-row div#mail-col div#main-profile-card div.profile-circle {
+    width: 8rem; 
+    height: 8rem;
+    background-image: url(../assets/arulogo.png) !important;                       
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: 50% 50%; 
+    margin-top: 1rem;
+} */
+
+.all-module-text {
+    color:#ffffff; 
+    font-size:2rem;
+}
+
+.list-group{
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.headerImage{
+    width:6rem; 
+    height:6rem;
+    background:url(https://webservices.anglia.ac.uk/Photo/StudentPhoto/1842297/9C119A9A84ACF9E3BC81AAA873664074) no-repeat 0 0 ;
+    background-color:#fff !important; 
+    /* background-size: 20px 10px;   */
+    background-size: cover;
+    background-position: 50% 50%;
+
+}
+
+.personalTutor{
+    width:5rem; 
+    height:5rem;
+    background:url(https://webservices.anglia.ac.uk/Photo/StaffPhoto/CL19/5729DDD04734D81D8B8149329F74BA30/140) no-repeat 0 0 ;
+    background-color:#fff !important; 
+    background-size: cover;
+   background-position: -5% -5%;
+}
+
+.horizontal-scroll-wrapper {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 515px;
+    max-height: 900px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: rotate(-90deg) translateY(-500px);
+    transform-origin: right top;
+    margin-top: 10px;
+
+}
+
+.horizontal-scroll-wrapper > .modules{
+    display: block;
+    padding: 0rem 0px 0px 30rem;
+    transform: rotate(90deg);
+    transform-origin: right top;
+    height: 21rem;
+}
+
+.cont ::-webkit-scrollbar {
+    display: none; /* Safari and Chrome  */
+}
+
+.cont {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.square {
+    height: 15px;
+    width: 15px;
+    margin: 1rem;
+    border-radius: 6px;
+}
