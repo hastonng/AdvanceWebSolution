@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2020 at 03:12 PM
+-- Generation Time: Mar 31, 2020 at 11:05 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -25,19 +25,91 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `announcement`
+--
+
+CREATE TABLE `announcement` (
+  `Announcement_ID` int(255) NOT NULL,
+  `Announcement_Title` varchar(255) NOT NULL,
+  `Announcement_Description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `announcement`
+--
+
+INSERT INTO `announcement` (`Announcement_ID`, `Announcement_Title`, `Announcement_Description`) VALUES
+(1, 'Covid-19', 'Please Take Good Care of Yourselves.');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `attendance`
 --
 
 CREATE TABLE `attendance` (
   `Attendance_ID` int(255) NOT NULL,
-  `Student_ID` int(255) DEFAULT NULL,
+  `Student_ID` int(255) NOT NULL,
   `Class_ID` int(255) DEFAULT NULL,
-  `StudentModule_ID` int(255) DEFAULT NULL,
   `Week_ID` int(255) DEFAULT NULL,
-  `Start_Time` varchar(255) DEFAULT NULL,
-  `End_Time` varchar(255) DEFAULT NULL,
   `Date` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`Attendance_ID`, `Student_ID`, `Class_ID`, `Week_ID`, `Date`) VALUES
+(1, 1, 1, 1, '20012020'),
+(2, 1, 2, 1, '20012020'),
+(3, 1, 4, 1, '23012020'),
+(4, 1, 5, 1, '23012020'),
+(5, 1, 6, 1, '23012020'),
+(6, 2, 1, 1, '20012020'),
+(7, 2, 2, 1, '20012020'),
+(8, 2, 5, 1, '23012020'),
+(9, 2, 6, 1, '23012020'),
+(10, 1, 1, 2, '27012020'),
+(11, 1, 2, 2, '27012020'),
+(12, 1, 4, 2, '30012020'),
+(13, 1, 5, 2, '30012020'),
+(15, 2, 1, 2, '27012020'),
+(16, 2, 4, 2, '30012020'),
+(17, 2, 5, 2, '30012020'),
+(18, 2, 6, 2, '30012020'),
+(19, 1, 1, 3, '03022020'),
+(20, 1, 2, 3, '03022020'),
+(21, 1, 4, 3, '06022020'),
+(22, 1, 5, 3, '06022020'),
+(23, 1, 6, 3, '06022020'),
+(24, 1, 1, 4, NULL),
+(25, 1, 2, 4, NULL),
+(26, 1, 4, 4, NULL),
+(27, 1, 5, 4, NULL),
+(28, 1, 6, 4, NULL),
+(29, 1, 1, 5, NULL),
+(30, 1, 2, 5, NULL),
+(31, 1, 4, 5, NULL),
+(33, 1, 6, 5, NULL),
+(34, 1, 1, 6, NULL),
+(35, 1, 2, 6, NULL),
+(36, 1, 4, 6, NULL),
+(37, 1, 5, 6, NULL),
+(38, 1, 6, 6, NULL),
+(39, 1, 1, 7, NULL),
+(40, 1, 2, 7, NULL),
+(41, 1, 4, 7, NULL),
+(43, 1, 6, 7, NULL),
+(44, 1, 1, 8, NULL),
+(45, 1, 2, 8, NULL),
+(46, 1, 4, 8, NULL),
+(47, 1, 5, 8, NULL),
+(48, 1, 6, 8, NULL),
+(49, 1, 1, 9, NULL),
+(50, 1, 2, 9, NULL),
+(51, 1, 4, 9, NULL),
+(52, 1, 5, 9, NULL),
+(53, 1, 6, 9, NULL);
 
 -- --------------------------------------------------------
 
@@ -71,7 +143,8 @@ INSERT INTO `class_module` (`Class_ID`, `Module_ID`, `Day_ID`, `Room_ID`, `Staff
 (8, 4, 3, 1, 8, 1, '09:00am', '10:00am'),
 (9, 4, 3, 10, 1, 2, '02:00pm', '04:00pm'),
 (10, 5, 2, 13, 9, 1, '10:00am', '12:00pm'),
-(11, 5, 2, 16, 9, 2, '01:00pm', '03:00pm');
+(11, 5, 2, 16, 9, 2, '01:00pm', '03:00pm'),
+(12, 17, 6, 2, 4, 1, '02:00pm', '4:00pm');
 
 -- --------------------------------------------------------
 
@@ -83,7 +156,7 @@ CREATE TABLE `class_student` (
   `ClassStudent_ID` int(255) NOT NULL,
   `Class_ID` int(255) NOT NULL,
   `Student_ID` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Add Students to the class';
 
 --
 -- Dumping data for table `class_student`
@@ -105,7 +178,15 @@ INSERT INTO `class_student` (`ClassStudent_ID`, `Class_ID`, `Student_ID`) VALUES
 (13, 1, 5),
 (14, 1, 6),
 (15, 3, 5),
-(16, 3, 6);
+(16, 3, 6),
+(17, 4, 1),
+(18, 4, 2),
+(19, 5, 1),
+(20, 5, 2),
+(21, 6, 1),
+(22, 6, 2),
+(23, 12, 1),
+(24, 12, 2);
 
 -- --------------------------------------------------------
 
@@ -150,7 +231,7 @@ CREATE TABLE `login_details` (
 
 INSERT INTO `login_details` (`Login_ID`, `Login_Email`, `Username`, `Login_Password`) VALUES
 (1, 'hastonng@studentanglia.com', 'hastonng', 'e10adc3949ba59abbe56e057f20f883e'),
-(2, NULL, 'arunkumar', 'e10adc3949ba59abbe56e057f20f883e'),
+(2, 'arunkumar@studentanglia.com', 'arunkumar', 'e10adc3949ba59abbe56e057f20f883e'),
 (3, 'aroojfatima@anglia.com', 'aroojfatima', 'e10adc3949ba59abbe56e057f20f883e'),
 (4, 'swathithota@anglia.com', 'swathithota', 'e10adc3949ba59abbe56e057f20f883e'),
 (5, NULL, 'joshuageorge', '670b14728ad9902aecba32e22fa4f6bd'),
@@ -180,30 +261,32 @@ CREATE TABLE `module_details` (
   `Module_ID` int(10) NOT NULL,
   `Staff_ID` int(10) DEFAULT NULL,
   `Module_Name` varchar(255) NOT NULL,
-  `Module_Code` varchar(50) NOT NULL
+  `Module_Code` varchar(50) NOT NULL,
+  `Max_Attendance` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `module_details`
 --
 
-INSERT INTO `module_details` (`Module_ID`, `Staff_ID`, `Module_Name`, `Module_Code`) VALUES
-(1, 4, 'Advance Web Solution', 'MOD004364'),
-(2, 5, 'Web Application Security', 'MOD004364'),
-(3, 6, 'Research Methods', 'MOD002695'),
-(4, 8, 'Computer Graphics Programming', 'MOD006127'),
-(5, 9, 'Data Structures and Algorithms', 'MOD002641'),
-(6, 8, 'Distributed Programming', 'MOD006128'),
-(7, 4, 'Undergraduate Final Project', 'MOD002691'),
-(8, 9, 'Image Processing', 'MOD002643'),
-(9, 7, 'Mobile Technology', 'MOD002663'),
-(10, 6, 'Professional Issues: Computing and Society', 'MOD002647'),
-(11, 1, 'Interaction and Usability', 'MOD002591'),
-(12, 7, 'Object Oriented C++', 'MOD003197'),
-(13, 5, 'Digital Security', 'MOD003264'),
-(14, 1, 'Database Design and Implementation', 'MOD002589'),
-(15, 5, 'Network Routing', 'MOD003262'),
-(16, 4, 'Software Engineering', 'MOD003263');
+INSERT INTO `module_details` (`Module_ID`, `Staff_ID`, `Module_Name`, `Module_Code`, `Max_Attendance`) VALUES
+(1, 4, 'Advance Web Solution', 'MOD004364', 24),
+(2, 5, 'Web Application Security', 'MOD006363', 24),
+(3, 6, 'Research Methods', 'MOD002695', 12),
+(4, 8, 'Computer Graphics Programming', 'MOD006127', 24),
+(5, 9, 'Data Structures and Algorithms', 'MOD002641', 24),
+(6, 8, 'Distributed Programming', 'MOD006128', 24),
+(7, 4, 'Undergraduate Final Project', 'MOD002691', 24),
+(8, 9, 'Image Processing', 'MOD002643', 24),
+(9, 7, 'Mobile Technology', 'MOD002663', 24),
+(10, 6, 'Professional Issues: Computing and Society', 'MOD002647', 12),
+(11, 1, 'Interaction and Usability', 'MOD002591', 12),
+(12, 7, 'Object Oriented C++', 'MOD003197', 24),
+(13, 5, 'Digital Security', 'MOD003264', 24),
+(14, 1, 'Database Design and Implementation', 'MOD002589', 24),
+(15, 5, 'Network Routing', 'MOD003262', 24),
+(16, 4, 'Software Engineering', 'MOD003263', 24),
+(17, 4, 'Data Centre and Cloud Infrastructures', 'MOD003454', 24);
 
 -- --------------------------------------------------------
 
@@ -263,9 +346,9 @@ CREATE TABLE `staff_details` (
 
 INSERT INTO `staff_details` (`Staff_ID`, `Login_ID`, `First_Name`, `Last_Name`, `Staff_Email`, `PhoneNo`, `Mail_Address`, `Staff_Type`) VALUES
 (1, 3, 'Arooj', 'Fatima', 'aroojfatima@anglia.com', '447080603934', 'South Cambridge, England', 2),
-(2, 4, 'Swathi', 'Thota', 'swathithota@anglia.com', '447538473473', 'East London, England', 3),
+(2, 4, 'David', 'Jesse', 'davidjesse@anglia.com', '447538473473', 'East London, England', 3),
 (3, 5, 'Kaushik', 'Liliyan', 'kaushikliliyan@anglia.com', '446675868685', 'Dublin, Ireland', 1),
-(4, 6, 'Christina', 'Luca', 'christinaluca@anglia.com', '446868686885', 'Athens, Greece', 2),
+(4, 6, 'Christina', 'Luca', 'christinaluca@anglia.com', '446868686885', 'Rome, Italy', 2),
 (5, 7, 'Andrew', 'Moore', 'andrewmoore@anglia.com', '447889899887', 'Belfast, Northern Ireland', 2),
 (6, 8, 'Jin', 'Zhang', 'jinzhang@anglia.com', '446585855858', 'Zhong Hua, China', 2),
 (7, 15, 'Razvan', 'Dinita', 'razvandinita@anglia.com', '441223698705', 'Moscow, Russia', 2),
@@ -324,8 +407,41 @@ CREATE TABLE `student_module` (
 --
 
 INSERT INTO `student_module` (`StudentModule_ID`, `Module_ID`, `Student_ID`, `Start_Date`, `End_Date`) VALUES
-(1, 1, 1, '20012020', '26042020'),
-(2, 1, 2, '20012020', '26042020');
+(1, 1, 1, '20012020', '24042020'),
+(2, 1, 2, '20012020', '24042020'),
+(4, 2, 1, '20012020', '24042020'),
+(5, 2, 2, '20012020', '24042020'),
+(6, 3, 1, '20012020', '24042020'),
+(7, 3, 2, '20012020', '24042020');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_tutor`
+--
+
+CREATE TABLE `student_tutor` (
+  `StudentTutor_ID` int(100) NOT NULL,
+  `Student_ID` int(255) NOT NULL,
+  `Staff_ID` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `student_tutor`
+--
+
+INSERT INTO `student_tutor` (`StudentTutor_ID`, `Student_ID`, `Staff_ID`) VALUES
+(1, 1, 4),
+(2, 2, 1),
+(3, 3, 3),
+(4, 5, 3),
+(5, 6, 7),
+(6, 7, 7),
+(7, 9, 6),
+(8, 10, 4),
+(9, 4, 4),
+(10, 8, 1),
+(11, 11, 4);
 
 -- --------------------------------------------------------
 
@@ -364,6 +480,12 @@ INSERT INTO `week_details` (`Week_ID`, `Week_Num`, `Week_Type`, `Start_Date`, `E
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `announcement`
+--
+ALTER TABLE `announcement`
+  ADD PRIMARY KEY (`Announcement_ID`);
 
 --
 -- Indexes for table `attendance`
@@ -426,8 +548,13 @@ ALTER TABLE `student_details`
 -- Indexes for table `student_module`
 --
 ALTER TABLE `student_module`
-  ADD PRIMARY KEY (`StudentModule_ID`),
-  ADD UNIQUE KEY `Student_ID` (`Student_ID`);
+  ADD PRIMARY KEY (`StudentModule_ID`);
+
+--
+-- Indexes for table `student_tutor`
+--
+ALTER TABLE `student_tutor`
+  ADD PRIMARY KEY (`StudentTutor_ID`);
 
 --
 -- Indexes for table `week_details`
@@ -440,22 +567,28 @@ ALTER TABLE `week_details`
 --
 
 --
+-- AUTO_INCREMENT for table `announcement`
+--
+ALTER TABLE `announcement`
+  MODIFY `Announcement_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `Attendance_ID` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `Attendance_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `class_module`
 --
 ALTER TABLE `class_module`
-  MODIFY `Class_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `Class_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `class_student`
 --
 ALTER TABLE `class_student`
-  MODIFY `ClassStudent_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ClassStudent_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `login_details`
@@ -467,7 +600,7 @@ ALTER TABLE `login_details`
 -- AUTO_INCREMENT for table `module_details`
 --
 ALTER TABLE `module_details`
-  MODIFY `Module_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `Module_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `room_details`
@@ -491,7 +624,13 @@ ALTER TABLE `student_details`
 -- AUTO_INCREMENT for table `student_module`
 --
 ALTER TABLE `student_module`
-  MODIFY `StudentModule_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `StudentModule_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `student_tutor`
+--
+ALTER TABLE `student_tutor`
+  MODIFY `StudentTutor_ID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `week_details`
