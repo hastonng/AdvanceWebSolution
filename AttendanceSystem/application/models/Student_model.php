@@ -7,7 +7,6 @@ class Student_model extends CI_Model
     public $Student_ID;
     public $startDate;
     public $endDate;
-    public $Trimester_Period;
 
 
     public function setLoginEmail($email)
@@ -33,11 +32,6 @@ class Student_model extends CI_Model
     public function setEndDate($eDate)
     {
         $this->endDate = $eDate;
-    }
-
-    public function setTrimester_Period($tP)
-    {
-        $this->Trimester_Period = $tP;
     }
 
 
@@ -109,17 +103,25 @@ class Student_model extends CI_Model
         }	
     }
 
-    public function get_all_student_module()
+    public function get_upcoming_module()
     {
-        $pdo = DB::connectDatabase()->prepare("SELECT module_details.Module_ID,
+        $pdo = DB::connectDatabase()->prepare("SELECT class_module.Class_Type,
+		class_module.Start_Time,
+        class_module.End_Time,
+		module_details.Module_Name,
         module_details.Module_Code,
-        module_details.Module_Name
-		FROM module_details
-		INNER JOIN student_module ON module_details.Module_ID = student_module.Module_ID
-		WHERE student_module.Student_ID = :Student_ID;");
+        day_details.Day_ID,
+        day_details.Day_Name,
+        room_details.Room_Number,
+        room_details.Room_Building
+		FROM class_module
+        INNER JOIN class_student ON class_module.Class_ID = class_student.Class_ID
+        INNER JOIN module_details ON class_module.Module_ID = module_details.Module_ID
+        INNER JOIN day_details ON class_module.Day_ID = day_details.Day_ID
+        INNER JOIN room_details ON class_module.Room_ID = room_details.Room_ID
+        WHERE class_student.Student_ID = :Student_ID;");
 
-        $pdo->execute(array(
-            ':Student_ID' => $this->Student_ID));
+        $pdo->execute(array(':Student_ID' => $this->Student_ID));
         
 		$result = $pdo->fetchAll(PDO::FETCH_CLASS, 'Student_model');
 		if (count($result) > 0)
@@ -133,43 +135,9 @@ class Student_model extends CI_Model
         }	
     }
 
-    // public function get_upcoming_module()
-    // {
-    //     $pdo = DB::connectDatabase()->prepare("SELECT class_module.Class_ID,
-    //     class_module.Class_Type,
-	// 	class_module.Start_Time,
-    //     class_module.End_Time,
-	// 	module_details.Module_Name,
-    //     module_details.Module_Code,
-    //     day_details.Day_ID,
-    //     day_details.Day_Name,
-    //     room_details.Room_Number,
-    //     room_details.Room_Building
-	// 	FROM class_module
-    //     INNER JOIN class_student ON class_module.Class_ID = class_student.Class_ID
-    //     INNER JOIN module_details ON class_module.Module_ID = module_details.Module_ID
-    //     INNER JOIN day_details ON class_module.Day_ID = day_details.Day_ID
-    //     INNER JOIN room_details ON class_module.Room_ID = room_details.Room_ID
-    //     WHERE class_student.Student_ID = :Student_ID;");
-
-    //     $pdo->execute(array(':Student_ID' => $this->Student_ID));
-        
-	// 	$result = $pdo->fetchAll(PDO::FETCH_CLASS, 'Student_model');
-	// 	if (count($result) > 0)
-	// 	{
-    //         return $result;
-    //     }	
-	// 	else
-	// 	{
-    //         return false;
-    //         // throw new Exception("No module found.", 204);
-    //     }	
-    // }
-
     public function getTimetable()
     {
-        $pdo = DB::connectDatabase()->prepare("SELECT class_module.Class_ID,
-        class_module.Class_Type,
+        $pdo = DB::connectDatabase()->prepare("SELECT class_module.Class_Type,
 		class_module.Start_Time,
         class_module.End_Time,
 		module_details.Module_Name,
@@ -184,11 +152,9 @@ class Student_model extends CI_Model
         INNER JOIN day_details ON class_module.Day_ID = day_details.Day_ID
         INNER JOIN room_details ON class_module.Room_ID = room_details.Room_ID
         WHERE class_student.Student_ID = :Student_ID
-        AND class_module.Trimester_Period = :Trimester_Period
         ORDER BY day_details.Day_Name ASC, STR_TO_DATE(class_module.Start_Time, '%l:%i %p') ASC");
 
-        $pdo->execute(array(':Student_ID' => $this->Student_ID,
-        ':Trimester_Period' => $this->Trimester_Period));
+        $pdo->execute(array(':Student_ID' => $this->Student_ID));
         
 		$result = $pdo->fetchAll(PDO::FETCH_CLASS, 'Student_model');
 		if (count($result) > 0)
@@ -198,6 +164,7 @@ class Student_model extends CI_Model
 		else
 		{
             return false;
+            // throw new Exception("No module found.", 204);
         }	
     }
 
@@ -259,25 +226,6 @@ class Student_model extends CI_Model
         $pdo->execute(array(':Student_ID' => $this->Student_ID));
         
 		$result = $pdo->fetchAll(PDO::FETCH_CLASS, 'Student_model');
-		if (count($result) > 0)
-		{
-            return $result;
-        }	
-		else
-		{
-            return false;
-            // throw new Exception("No module found.", 204);
-        }	
-    }
-
-    public function get_announcement()
-    {
-        $pdo = DB::connectDatabase()->prepare("SELECT * FROM `announcement`
-        ORDER BY STR_TO_DATE( announcement.Date_, '%D %M %Y') DESC , announcement.Announcement_ID DESC;");
-        
-        $pdo->execute();
-        
-		$result = $pdo->fetchAll(PDO::FETCH_CLASS, 'Staff_model');
 		if (count($result) > 0)
 		{
             return $result;
