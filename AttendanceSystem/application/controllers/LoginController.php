@@ -3,6 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class LoginController extends CI_Controller 
 {
 
+    function __construct() {
+        parent::__construct();
+        $this->load->helper('url');
+    }
+    
+
     public function index()
     {
         $page_name = 'LoginPage';
@@ -11,50 +17,94 @@ class LoginController extends CI_Controller
                 // Whoops, we don't have a page for that!
                 show_404();
         }
-        $this->load->view('pages/'.$page_name);
+        // if already login
+        if($this->session->userdata('Login_Email') !== null && $this->session->userdata('Login_ID') !== null)
+        {
+            if(strpos($this->session->userdata('Login_Email'), "@anglia"))
+            {
+                redirect('/Staff/index');
+            }
+            else if(strpos($this->session->userdata('Login_Email'), "@studentanglia"))
+            {
+                redirect('/Student/index');
+            }
+        }
+        else
+        {
+            $this->load->view('pages/'.$page_name);
+        }
     }
 
     public function login()
     {
         //Get POST
         $rawData = json_decode(file_get_contents('php://input'), true);
-        $jsonPost = $this->security->xss_clean($rawData);
-        $token = $this->security->get_csrf_token_name();
-        $hash = $this->security->get_csrf_hash(); 
+        $cleanData = $this->security->xss_clean($rawData);
 
-        //Lode User Model
-        $this->load->model('User_model');
 
-        if(empty($jsonPost['inputEmail']) && empty($jsonPost['inputPassword']))
+        if(empty($cleanData['inputEmail']) && empty($cleanData['inputPassword']))
         {
-            echo json_encode("");
+            redirect('/page404');
         }
         else
         {
-            $email = $jsonPost['inputEmail'];
-            $pass = $jsonPost['inputPassword'];
-            $this->User_model->setLoginEmail($jsonPost['inputEmail']);
-            $this->User_model->setPassword($jsonPost['inputPassword']);
-            $data['result']= $this->User_model->get_login();
-
-            if($data['result'] === false)
+            //Check User Email Type
+            if(strpos($cleanData['inputEmail'], "@anglia"))
             {
-                echo json_encode("False");
+                $this->Staff_model->setLoginEmail($cleanData['inputEmail']);
+                $this->Staff_model->setPassword($cleanData['inputPassword']);
+                $data['result'] = $this->Staff_model->staff_login();
+            }
+            else if(strpos($cleanData['inputEmail'], "@studentanglia"))
+            {
+                $this->Student_model->setLoginEmail($cleanData['inputEmail']);
+                $this->Student_model->setPassword($cleanData['inputPassword']);
+                $data['result'] = $this->Student_model->student_login();
+
             }
             else
             {
-                if($data['result'] === "True1")
+                //Invalid Email address
+                $data['result'] = false;
+            }
+            
+            //Check if the login successful
+            if($data['result'] === false)
+            {
+                $response = array('message'=>false);
+                echo json_encode($response);
+            }
+            else
+            {
+                //Staff Redirect
+                if(strpos($cleanData['inputEmail'], "@anglia"))
                 {
-                    $url = array('token'=>$token, 'hash'=>$hash, 'url'=>'index.php/Home/index');
+                    //Set Session Data
+                    $this->session->set_userdata('Login_Email', $data['result'][0]->Login_Email);
+                    $this->session->set_userdata('Login_ID', $data['result'][0]->Staff_ID);
+                    $this->session->set_userdata('Staff_Type', $data['result'][0]->Staff_Type);
 
-                    echo json_encode($url);
-
+                    $response = array('message'=>true, 'url'=>'Staff/index');
+                    echo json_encode($response);
                 }
-                else if($data['result'] === "True2")
+                //Student Redirect
+                else if(strpos($cleanData['inputEmail'], "@studentanglia"))
                 {
-                    echo json_encode("True2");
-                }
+                    //Set Session Data
+                    $this->session->set_userdata('Login_Email', $data['result'][0]->Login_Email);
+                    $this->session->set_userdata('Login_ID', $data['result'][0]->Student_ID);
+                    
+                    $response = array('message'=>true, 'url'=>'Student/index');
+                    echo json_encode($response);
+                }               
             }
         }        
+    }
+
+    public function logout()
+    {
+        session_destroy();
+        redirect('');
+        // echo json_encode("Logout!!");
     }
 }

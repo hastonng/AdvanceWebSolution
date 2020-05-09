@@ -16,6 +16,10 @@ class Student extends CI_Controller
                 {
                     redirect('');
                 }
+                else if(!strpos($this->session->userdata('Login_Email'), "@studentanglia"))
+                {
+                        redirect('');
+                }
                 else
                 {
                         $this->readDates();
@@ -59,16 +63,25 @@ class Student extends CI_Controller
                         $studentModule = $this->getStudentModule();
                         $result['personalTutor'] = $this->personalTutor();
 
-                        for($i = 0; $i < count($studentModule); $i++)
+                        if($studentModule != false)
                         {
-                                $attendance[$i] = $this->Student_model->get_module_attendance($studentModule[$i]->Module_ID);
+                                for($i = 0; $i < count($studentModule); $i++)
+                                {
+                                        $attendance[$i] = $this->Student_model->get_module_attendance($studentModule[$i]->Module_ID);
+
+                                }
+
+                                $result['attendance'] = $this->module_attendance($attendance);
+                                
+                        }
+                        else
+                        {
+                                //No Modules
+                                $result['attendance'] = array('aveAttendance' => '0.00','module' => []);
                         }
 
-                        $result['attendance'] = $this->module_attendance($attendance);
+                        $result['triNum'] = $this->getTrimester();
                         $result['headerData'] = $headerData;
-
-                        // echo json_encode($result);
-                        // var_dump($result['attendance']['module']);
                         
                         $this->load->view('templates/header',$headerData);
                         $this->load->view('pages/'.$page_name,$result);
@@ -105,6 +118,9 @@ class Student extends CI_Controller
         {
                  //Set Student ID
                  $this->Student_model->setStudent_ID($this->session->userdata('Login_ID'));
+                 $this->checkTrimester();
+                // $this->Student_model->setTrimester_Period(2);
+
                  //Get Timetable
                  $data['timetable'] = $this->Student_model->getTimetable();
 
@@ -115,10 +131,40 @@ class Student extends CI_Controller
         {
                 $File = file_get_contents("C:/xampp/htdocs/AttendanceSystem/application/helpers/trimester.txt");
                 $stringarr = preg_split('/\s+/', $File);
-                
-                // echo $stringarr[0]," ",$stringarr[1];
                 $this->Student_model->setStartDate($stringarr[0]);
                 $this->Student_model->setEndDate($stringarr[1]);
+        }
+
+        public function checkTrimester()
+        {
+                if((date('m') >= 8) && (date('m') <= 12))
+                {
+                        $this->Student_model->setTrimester_Period(1);
+                }
+                else if((date('m') >= 1) && (date('m') <= 4))
+                {
+                        $this->Student_model->setTrimester_Period(2);
+                }
+                else
+                {
+                        $this->Student_model->setTrimester_Period(3);
+                }
+        }
+
+        public function getTrimester()
+        {
+                if((date('m') >= 8) && (date('m') <= 12))
+                {
+                        return 1;
+                }
+                else if((date('m') >= 1) && (date('m') <= 4))
+                {
+                        return 2;
+                }
+                else
+                {
+                        return 3;
+                }
         }
 
         public function getStudentDetails()
@@ -128,13 +174,18 @@ class Student extends CI_Controller
                 //Get Student Details
                 $studentDetails['student_details'] = $this->Student_model->get_student_details();
                 $data = array('fName' => $studentDetails['student_details'][0]->First_Name,
-                        'lName' => $studentDetails['student_details'][0]->Last_Name);
+                        'lName' => $studentDetails['student_details'][0]->Last_Name,
+                        'courseName' => $studentDetails['student_details'][0]->Course_Prog." ".$studentDetails['student_details'][0]->Course_Name,
+                        'email' => $studentDetails['student_details'][0]->Student_Email,
+                        'sID' => $studentDetails['student_details'][0]->Student_ID);
 
                 return $data;
         }
 
         public function getStudentModule()
         {
+                //read trimester dates
+                $this->readDates();
                 //Set Student ID
                 $this->Student_model->setStudent_ID($this->session->userdata('Login_ID'));
                 //Get Student Module
@@ -147,8 +198,11 @@ class Student extends CI_Controller
         {
                 //Set Student ID
                 $this->Student_model->setStudent_ID($this->session->userdata('Login_ID'));
+                $this->checkTrimester();
+                // $this->Student_model->setTrimester_Period(2);
+
                 //Get Student Module
-                $data = $this->Student_model->get_upcoming_module();
+                $data = $this->Student_model->getTimetable();
 
                 return $data;
         }
@@ -181,5 +235,43 @@ class Student extends CI_Controller
                 $average = number_format($average, 1);
                 return $resultArray = array('module' => $array, 'attendancePercentage' => $attendancePercentage, 'aveAttendance' => $average);
         }
+
+        public function getAnnouncement()
+        {
+                $result = $this->Student_model->get_announcement();
+
+                echo json_encode($result);
+        }
+
+
+        public function uploadImage() 
+        {
+                $image_path = realpath(APPPATH."../assets/sImage");
+
+                // echo json_encode($image_path);
+                $config['upload_path'] = $image_path;
+                $config['overwrite'] = TRUE;
+                $config['file_name'] = $this->session->userdata('Login_ID')."_userImg";
+                $config['allowed_types'] = 'jpg|png';
+                $config['max_size'] = 2000;
+                $config['max_width'] = 1500;
+                $config['max_height'] = 1500;
+                
+                $this->load->library('upload', $config);
+
+                if (!$this->upload->do_upload('profile_image')) {
+                        // $error = array('error' => $this->upload->display_errors());
+
+                        echo json_encode("false");
+                        // $this->load->view('files/upload_form', $error);
+                } else {
+                        $data = array('img_data' => $this->upload->data());
+                        
+                        $fileName = $data['img_data']['file_name'];
+                        echo json_encode($fileName);
+                        // $this->load->view('files/upload_result', $data);
+                }
+        }
+
         
 }
